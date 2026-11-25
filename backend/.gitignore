@@ -1,0 +1,19 @@
+# Backend Dependencies
+node_modules/
+
+# Environment credentials
+.env
+.env.local
+.env.*.local
+
+# Local SQLite backup (keep locally, ignore from git commits)
+college.db
+
+# Logs
+*.log
+
+# Ephemeral runtime uploads
+uploads/gallery/*
+!uploads/gallery/.gitkeep
+uploads/notices/*
+!uploads/notices/.gitkeep

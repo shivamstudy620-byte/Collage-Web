@@ -1,0 +1,14 @@
+# Frontend Dependencies
+node_modules/
+
+# Production build output
+dist/
+dist-ssr/
+
+# Environment credentials
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log

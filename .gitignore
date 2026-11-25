@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Environment files and credentials
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+
+# Local SQLite databases and backups
+*.db
+college.db
+backend/college.db
+
+# Build artifacts
+dist/
+build/
+.dist/
+
+# Logs and system
+*.log
+npm-debug.log*
+.system_generated/
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+
+!.env.example
+!**/.env.example
