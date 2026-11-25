@@ -151,24 +151,29 @@ const ManageNotices = () => {
   };
 
   return (
-    <div className="py-4 bg-light min-vh-100">
+    <div className="py-3 py-md-4 bg-light min-vh-100 admin-manage-section admin-notices-section">
       <div className="container">
         {/* Navigation Breadcrumb */}
-        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
-          <Link to="/admin/dashboard" className="text-navy fw-semibold small d-inline-flex align-items-center">
+        <div className="admin-manage-topbar d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mb-md-4">
+          <Link to="/admin/dashboard" className="admin-back-link text-navy fw-semibold small d-inline-flex align-items-center">
             <FaArrowLeft className="me-1" /> Back to Dashboard
           </Link>
-          <button type="button" onClick={openAddModal} className="btn btn-primary-custom d-flex align-items-center">
+          <button
+            type="button"
+            onClick={openAddModal}
+            className="btn btn-primary-custom admin-add-btn d-inline-flex align-items-center justify-content-center"
+          >
             <FaPlus className="me-2" /> Add New Notice
           </button>
         </div>
 
-        <div className="card-custom p-4 shadow-sm border-0">
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 border-bottom pb-3">
-            <h3 className="font-heading text-navy fw-bold mb-0">
-              <FaBullhorn className="me-2 text-danger" /> Manage Notice Board
+        <div className="card-custom admin-manage-card p-4 shadow-sm border-0">
+          <div className="admin-manage-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mb-md-4 border-bottom pb-3">
+            <h3 className="admin-manage-title font-heading text-navy fw-bold mb-0 d-flex align-items-center">
+              <FaBullhorn className="me-2 text-danger flex-shrink-0" />
+              <span>Manage Notice Board</span>
             </h3>
-            <span className="badge bg-navy">{notices.length} Notices</span>
+            <span className="badge bg-navy admin-count-badge">{notices.length} Notices</span>
           </div>
 
           {loading ? (
@@ -178,71 +183,121 @@ const ManageNotices = () => {
               </div>
             </div>
           ) : error ? (
-            <div className="alert alert-danger d-flex flex-wrap justify-content-between align-items-center gap-2">
-              <span>{error}</span>
+            <div className="alert alert-danger d-flex flex-wrap justify-content-between align-items-center gap-2 mb-0">
+              <span className="word-break">{error}</span>
               <button type="button" className="btn btn-sm btn-outline-danger" onClick={fetchNotices}>Retry</button>
             </div>
           ) : notices.length === 0 ? (
-            <div className="alert alert-info text-center py-4">No notices currently published. Click &quot;Add New Notice&quot; to create one.</div>
+            <div className="alert alert-info text-center py-4 mb-0">No notices currently published. Click &quot;Add New Notice&quot; to create one.</div>
           ) : (
-            <div className="table-responsive">
-              <table className="table table-hover align-middle mb-0">
-                <thead className="table-dark">
-                  <tr>
-                    <th>Date</th>
-                    <th>Notice Title</th>
-                    <th>Attached PDF</th>
-                    <th className="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {notices.map((n) => (
-                    <tr key={n.id}>
-                      <td className="fw-semibold text-nowrap">{n.notice_date}</td>
-                      <td>
-                        <strong className="text-navy">{n.title}</strong>
-                        {n.description && (
-                          <div className="small text-muted text-truncate" style={{ maxWidth: '400px' }}>
-                            {n.description}
-                          </div>
-                        )}
-                      </td>
-                      <td>
-                        {n.pdf_path ? (
-                          <a href={getAssetUrl(n.pdf_path)} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-danger">
-                            <FaFilePdf className="me-1" /> PDF File
-                          </a>
-                        ) : (
-                          <span className="badge bg-light text-muted border">No PDF</span>
-                        )}
-                      </td>
-                      <td className="text-end text-nowrap">
-                        <button type="button" onClick={() => openEditModal(n)} className="btn btn-sm btn-outline-primary me-2">
-                          <FaEdit className="me-1" /> Edit
-                        </button>
-                        <button type="button" onClick={() => handleDelete(n.id, n.title)} className="btn btn-sm btn-danger">
-                          <FaTrash className="me-1" /> Delete
-                        </button>
-                      </td>
+            <>
+              {/* Desktop & Tablet Table View */}
+              <div className="table-responsive d-none d-md-block">
+                <table className="table table-hover align-middle mb-0 admin-notices-table">
+                  <thead className="table-dark">
+                    <tr>
+                      <th>Date</th>
+                      <th>Notice Title</th>
+                      <th>Attached PDF</th>
+                      <th className="text-end">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {notices.map((n) => (
+                      <tr key={n.id}>
+                        <td className="fw-semibold text-nowrap">{n.notice_date}</td>
+                        <td>
+                          <strong className="text-navy">{n.title}</strong>
+                          {n.description && (
+                            <div className="small text-muted text-truncate admin-notice-desc">
+                              {n.description}
+                            </div>
+                          )}
+                        </td>
+                        <td>
+                          {n.pdf_path ? (
+                            <a href={getAssetUrl(n.pdf_path)} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-danger text-nowrap">
+                              <FaFilePdf className="me-1" /> PDF File
+                            </a>
+                          ) : (
+                            <span className="badge bg-light text-muted border">No PDF</span>
+                          )}
+                        </td>
+                        <td className="text-end text-nowrap">
+                          <button type="button" onClick={() => openEditModal(n)} className="btn btn-sm btn-outline-primary me-2">
+                            <FaEdit className="me-1" /> Edit
+                          </button>
+                          <button type="button" onClick={() => handleDelete(n.id, n.title)} className="btn btn-sm btn-danger">
+                            <FaTrash className="me-1" /> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="d-md-none admin-mobile-list">
+                {notices.map((n) => (
+                  <div key={n.id} className="admin-mobile-item">
+                    <div className="admin-mobile-item-meta d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                      <span className="notice-date">{n.notice_date}</span>
+                      {n.pdf_path ? (
+                        <a
+                          href={getAssetUrl(n.pdf_path)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-danger admin-mobile-pdf-btn d-inline-flex align-items-center"
+                        >
+                          <FaFilePdf className="me-1 flex-shrink-0" /> PDF File
+                        </a>
+                      ) : (
+                        <span className="badge bg-light text-muted border">No PDF</span>
+                      )}
+                    </div>
+
+                    <h5 className="admin-mobile-item-title text-navy fw-bold mb-1 word-break">{n.title}</h5>
+                    {n.description && (
+                      <p className="admin-mobile-item-desc small text-muted mb-3 word-break">
+                        {n.description}
+                      </p>
+                    )}
+
+                    <div className="admin-mobile-actions d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(n)}
+                        className="btn btn-sm btn-outline-primary admin-mobile-action-btn d-inline-flex align-items-center justify-content-center"
+                      >
+                        <FaEdit className="me-1 flex-shrink-0" /> Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(n.id, n.title)}
+                        className="btn btn-sm btn-danger admin-mobile-action-btn d-inline-flex align-items-center justify-content-center"
+                      >
+                        <FaTrash className="me-1 flex-shrink-0" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="modal fade show d-block" role="dialog" aria-modal="true" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal fade show d-block admin-manage-modal" role="dialog" aria-modal="true" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered modal-lg">
             <div className="modal-content shadow-lg border-0">
               <div className="modal-header bg-navy text-white">
                 <h5 className="modal-title font-heading fw-bold">
                   {editingNotice ? 'Edit Notice' : 'Publish New Notice'}
                 </h5>
-                <button type="button" className="btn-close btn-close-white" aria-label="Close" onClick={() => setShowModal(false)}></button>
+                <button type="button" className="btn-close btn-close-white flex-shrink-0" aria-label="Close" onClick={() => setShowModal(false)}></button>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
@@ -282,7 +337,7 @@ const ManageNotices = () => {
                     ></textarea>
                   </div>
 
-                  <div className="mb-3">
+                  <div className="mb-3 mb-sm-0">
                     <label className="form-label fw-semibold">Attach Official PDF Document (Optional)</label>
                     <input
                       type="file"
@@ -290,13 +345,13 @@ const ManageNotices = () => {
                       accept=".pdf,application/pdf"
                       onChange={handlePdfChange}
                     />
-                    <small className="text-muted">Allowed format: PDF only. Max size: 10MB.</small>
+                    <small className="text-muted d-block mt-1">Allowed format: PDF only. Max size: 10MB.</small>
                     {editingNotice && editingNotice.pdf_path && !pdfFile && (
-                      <div className="mt-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
-                        <span className="small text-success">
+                      <div className="mt-2 d-flex flex-wrap align-items-center justify-content-between gap-2 admin-existing-pdf-row">
+                        <span className="small text-success word-break">
                           Current file: <a href={getAssetUrl(editingNotice.pdf_path)} target="_blank" rel="noreferrer">Existing PDF File</a>
                         </span>
-                        <div className="form-check">
+                        <div className="form-check mb-0">
                           <input
                             id="remove-existing-pdf"
                             type="checkbox"

@@ -112,24 +112,29 @@ const ManageCourses = () => {
   };
 
   return (
-    <div className="py-4 bg-light min-vh-100">
+    <div className="py-3 py-md-4 bg-light min-vh-100 admin-manage-section admin-courses-section">
       <div className="container">
         {/* Navigation Breadcrumb */}
-        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
-          <Link to="/admin/dashboard" className="text-navy fw-semibold small d-inline-flex align-items-center">
+        <div className="admin-manage-topbar d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mb-md-4">
+          <Link to="/admin/dashboard" className="admin-back-link text-navy fw-semibold small d-inline-flex align-items-center">
             <FaArrowLeft className="me-1" /> Back to Dashboard
           </Link>
-          <button type="button" onClick={openAddModal} className="btn btn-primary-custom d-flex align-items-center">
+          <button
+            type="button"
+            onClick={openAddModal}
+            className="btn btn-primary-custom admin-add-btn d-inline-flex align-items-center justify-content-center"
+          >
             <FaPlus className="me-2" /> Add Course Program
           </button>
         </div>
 
-        <div className="card-custom p-4 shadow-sm border-0">
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 border-bottom pb-3">
-            <h3 className="font-heading text-navy fw-bold mb-0">
-              <FaGraduationCap className="me-2 text-navy" /> Manage Degree Courses
+        <div className="card-custom admin-manage-card p-4 shadow-sm border-0">
+          <div className="admin-manage-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 mb-md-4 border-bottom pb-3">
+            <h3 className="admin-manage-title font-heading text-navy fw-bold mb-0 d-flex align-items-center">
+              <FaGraduationCap className="me-2 text-navy flex-shrink-0" />
+              <span>Manage Degree Courses</span>
             </h3>
-            <span className="badge bg-navy">{courses.length} Degree Programs</span>
+            <span className="badge bg-navy admin-count-badge">{courses.length} Degree Programs</span>
           </div>
 
           {loading ? (
@@ -139,56 +144,100 @@ const ManageCourses = () => {
               </div>
             </div>
           ) : error ? (
-            <div className="alert alert-danger d-flex flex-wrap justify-content-between align-items-center gap-2">
-              <span>{error}</span>
+            <div className="alert alert-danger d-flex flex-wrap justify-content-between align-items-center gap-2 mb-0">
+              <span className="word-break">{error}</span>
               <button type="button" className="btn btn-sm btn-outline-danger" onClick={fetchCourses}>Retry</button>
             </div>
           ) : courses.length === 0 ? (
-            <div className="alert alert-info text-center py-4">No course programs currently added.</div>
+            <div className="alert alert-info text-center py-4 mb-0">No course programs currently added.</div>
           ) : (
-            <div className="table-responsive">
-              <table className="table table-hover align-middle mb-0">
-                <thead className="table-dark">
-                  <tr>
-                    <th>Course Name</th>
-                    <th>Duration</th>
-                    <th>Eligibility</th>
-                    <th className="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {courses.map((c) => (
-                    <tr key={c.id}>
-                      <td className="fw-bold text-navy">{c.name}</td>
-                      <td><span className="badge bg-light text-navy border">{c.duration || '3 Years'}</span></td>
-                      <td className="small text-slate-700">{c.eligibility || 'N/A'}</td>
-                      <td className="text-end text-nowrap">
-                        <button type="button" onClick={() => openEditModal(c)} className="btn btn-sm btn-outline-primary me-2">
-                          <FaEdit className="me-1" /> Edit
-                        </button>
-                        <button type="button" onClick={() => handleDelete(c.id, c.name)} className="btn btn-sm btn-danger">
-                          <FaTrash className="me-1" /> Delete
-                        </button>
-                      </td>
+            <>
+              {/* Desktop & Tablet Table View */}
+              <div className="table-responsive d-none d-md-block">
+                <table className="table table-hover align-middle mb-0 admin-courses-table">
+                  <thead className="table-dark">
+                    <tr>
+                      <th>Course Name</th>
+                      <th>Duration</th>
+                      <th>Eligibility</th>
+                      <th className="text-end">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {courses.map((c) => (
+                      <tr key={c.id}>
+                        <td className="fw-bold text-navy">{c.name}</td>
+                        <td><span className="badge bg-light text-navy border admin-course-duration-badge">{c.duration || '3 Years'}</span></td>
+                        <td className="small text-slate-700">{c.eligibility || 'N/A'}</td>
+                        <td className="text-end text-nowrap">
+                          <button type="button" onClick={() => openEditModal(c)} className="btn btn-sm btn-outline-primary me-2">
+                            <FaEdit className="me-1" /> Edit
+                          </button>
+                          <button type="button" onClick={() => handleDelete(c.id, c.name)} className="btn btn-sm btn-danger">
+                            <FaTrash className="me-1" /> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="d-md-none admin-mobile-list">
+                {courses.map((c) => (
+                  <div key={c.id} className="admin-mobile-item admin-mobile-course-item">
+                    <div className="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                      <h5 className="admin-mobile-item-title text-navy fw-bold mb-0 word-break">{c.name}</h5>
+                      <span className="badge bg-light text-navy border admin-course-duration-badge">
+                        {c.duration || '3 Years'}
+                      </span>
+                    </div>
+
+                    <div className="small text-muted mb-2 word-break">
+                      <span className="fw-semibold text-navy">Eligibility:</span> {c.eligibility || 'N/A'}
+                    </div>
+
+                    {c.description && (
+                      <p className="admin-mobile-item-desc small text-muted mb-2 word-break">
+                        {c.description}
+                      </p>
+                    )}
+
+                    <div className="admin-mobile-actions d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(c)}
+                        className="btn btn-sm btn-outline-primary admin-mobile-action-btn d-inline-flex align-items-center justify-content-center"
+                      >
+                        <FaEdit className="me-1 flex-shrink-0" /> Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(c.id, c.name)}
+                        className="btn btn-sm btn-danger admin-mobile-action-btn d-inline-flex align-items-center justify-content-center"
+                      >
+                        <FaTrash className="me-1 flex-shrink-0" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="modal fade show d-block" role="dialog" aria-modal="true" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal fade show d-block admin-manage-modal" role="dialog" aria-modal="true" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content shadow-lg border-0">
               <div className="modal-header bg-navy text-white">
                 <h5 className="modal-title font-heading fw-bold">
                   {editingCourse ? 'Edit Degree Course' : 'Add Degree Course Program'}
                 </h5>
-                <button type="button" className="btn-close btn-close-white" aria-label="Close" onClick={() => setShowModal(false)}></button>
+                <button type="button" className="btn-close btn-close-white flex-shrink-0" aria-label="Close" onClick={() => setShowModal(false)}></button>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
@@ -229,7 +278,7 @@ const ManageCourses = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
+                  <div className="mb-3 mb-sm-0">
                     <label className="form-label fw-semibold">Course Program Description</label>
                     <textarea
                       className="form-control"
